@@ -61,7 +61,7 @@ public final class QueryUtils {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the cell JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -119,13 +119,23 @@ public final class QueryUtils {
         try {
 
 
-            JSONObject baseJsonResponse = new JSONObject(cellJSON);
+            JSONObject Cell = new JSONObject(cellJSON);
+
+            String currentCellName = Cell.getString("name");
+            JSONObject properties = Cell.getJSONObject("properties");
+            String currentCellFaction = properties.getString("faction");
+            Boolean currentCellPA = properties.getBoolean("locked");
+            Boolean currentCellLock = properties.getBoolean("locked");
+
+
+            Cell cell = new Cell(currentCellName, currentCellFaction, currentCellLock, currentCellPA);
+            cells.add(cell);
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
             //DO WORK HERE
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-            JSONArray cellArray = baseJsonResponse.getJSONArray("cell");
+           // JSONArray cellArray = baseJsonResponse.getJSONArray("cell");
 
          /*   // For each earthquake in the earthquakeArray, create an {@link Earthquake} object
             for (int i = 0; i < earthquakeArray.length(); i++) {
