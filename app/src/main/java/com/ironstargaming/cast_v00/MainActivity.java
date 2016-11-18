@@ -16,7 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Cell>> {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<CellContainer> {
 
 
     public static final String LOG_TAG = MainActivity.class.getName();
@@ -31,9 +31,13 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
-        ListView cellListView = (ListView) findViewById(R.id.list);
+        ListView centerCellListView = (ListView) findViewById(R.id.list);
+        ListView childCellListView = (ListView) findViewById(R.id.list);
+
         mEmptyStateView = (TextView) findViewById(R.id.empty_view);
-        cellListView.setEmptyView(mEmptyStateView);
+
+        centerCellListView.setEmptyView(mEmptyStateView);
+        childCellListView.setEmptyView(mEmptyStateView);
 
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -52,16 +56,16 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
 
         mAdapter = new CellAdapter(this, new ArrayList<Cell>());
-        cellListView.setAdapter(mAdapter);
+        childCellListView.setAdapter(mAdapter);
     }
 
     @Override
-    public Loader<List<Cell>> onCreateLoader(int id, Bundle bundle) {
+    public Loader<CellContainer> onCreateLoader(int id, Bundle bundle) {
         return new CellLoader(this, CAST_REQUEST_URL);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Cell>> loader, List<Cell> cells) {
+    public void onLoadFinished(Loader<CellContainer> loader, CellContainer cellContainer) {
 
         View loadingIndicator = (View) findViewById(R.id.load_indicator);
         loadingIndicator.setVisibility(View.GONE);
@@ -70,15 +74,17 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         mAdapter.clear();
 
-        if (cells != null && !cells.isEmpty()) {
-            mAdapter.addAll(cells);
+        List<Cell> childCellList = cellContainer.getChildCellList();
+
+        if (childCellList != null && !childCellList.isEmpty()) {
+            mAdapter.addAll(childCellList);
         }
 
 
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Cell>> loader) {
+    public void onLoaderReset(Loader<CellContainer> loader) {
         mAdapter.clear();
     }
 }

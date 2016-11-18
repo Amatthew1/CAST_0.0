@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Admin on 11/16/2016.
  */
 
-public class CellLoader extends AsyncTaskLoader<List<Cell>> {
+public class CellLoader extends AsyncTaskLoader<CellContainer> {
 
     private static final String LOG_TAG = CellLoader.class.getName();
 
@@ -26,12 +26,12 @@ public class CellLoader extends AsyncTaskLoader<List<Cell>> {
     }
 
     @Override
-    public List<Cell> loadInBackground() {
+    public CellContainer loadInBackground() {
         if (mUrl == null) {
             return null;
         }
-        List<Cell> cells = QueryUtils.fetchCellData(mUrl);
-        return cells;
+        CellContainer cellContainer = QueryUtils.fetchCellData(mUrl);
+        return cellContainer;
     }
 
 }

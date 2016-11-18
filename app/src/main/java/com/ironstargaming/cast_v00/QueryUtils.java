@@ -89,6 +89,30 @@ public final class QueryUtils {
     }
 
 
+    public static CellContainer fetchCellData(String requestUrl) {
+        URL url = createUrl(requestUrl);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+        }
+
+
+        CellContainer cellContainer = extractCellFromJson(jsonResponse);
+        /////////////////////////////////////////////fix return of extract
+
+
+///////////////////////////// fix whatever eats fetch
+
+        return cellContainer;
+    }
+
+
+
+
+/*
     public static List<Cell> fetchCellData(String requestUrl) {
         URL url = createUrl(requestUrl);
 
@@ -105,11 +129,71 @@ public final class QueryUtils {
 
         return cells;
     }
+*/
+
+    private static CellContainer extractCellFromJson(String jsonResponse) {
+
+        if (TextUtils.isEmpty(jsonResponse)) {
+            return null;
+        }
+
+        //////////////////////////////////////////////
+        //get ready for some janky stuff
+        //
+        //////////////////////////////////////////////
+        String string1 = "Name didnt stick";
+        String string2 = "Faction didnt stick";
+        boolean bool1 = true;
+        boolean bool2 =true;
 
 
-    private static List<Cell> extractCellFromJson(String cellJSON) {
+        List<Cell> childCells = new ArrayList<>();
+        Cell centerCell=new Cell(string1,string2, bool1,bool2);
+        Cell childCell;
+        CellContainer cellContainer=new CellContainer(centerCell, childCells);
 
-        if (TextUtils.isEmpty(cellJSON)) {
+
+        try {
+
+
+            JSONObject jsonCellContainer = new JSONObject(jsonResponse);
+
+            String centerCellName = jsonCellContainer.getString("name");
+            JSONObject properties = jsonCellContainer.getJSONObject("properties");
+            String centerCellFaction = properties.getString("faction");
+            Boolean centerCellPA = properties.getBoolean("player_awareness");
+            Boolean centerCellLock = properties.getBoolean("locked");
+            centerCell = new Cell(centerCellName, centerCellFaction, centerCellLock, centerCellPA);
+
+            JSONArray childCellsArray = jsonCellContainer.getJSONArray("inner_cells");
+            for (int i = 0; i < childCellsArray.length(); i++) {
+
+                /////////////////this is broken AF
+                String currentChildCell = childCellsArray.getString(i);
+                //so bad. fix it!
+                String childCellName = currentChildCell;
+                ////////////////////////////////
+                childCell = new Cell(childCellName, centerCellFaction, centerCellLock, centerCellPA);
+
+                childCells.add(childCell);
+
+            }
+
+            cellContainer = new CellContainer(centerCell, childCells);
+
+
+        } catch (JSONException e) {
+
+            Log.e("QueryUtils", "Problem parsing the cell JSON results", e);
+        }
+
+
+        return cellContainer;
+    }
+    /*
+    private static List<Cell> extractCellFromJson(String jsonResponse) {
+
+        if (TextUtils.isEmpty(jsonResponse)) {
             return null;
         }
 
@@ -119,55 +203,18 @@ public final class QueryUtils {
         try {
 
 
-            JSONObject Cell = new JSONObject(cellJSON);
+            JSONObject Cell = new JSONObject(jsonResponse);
 
             String currentCellName = Cell.getString("name");
             JSONObject properties = Cell.getJSONObject("properties");
             String currentCellFaction = properties.getString("faction");
-            Boolean currentCellPA = properties.getBoolean("locked");
+            Boolean currentCellPA = properties.getBoolean("player_awareness");
             Boolean currentCellLock = properties.getBoolean("locked");
 
 
             Cell cell = new Cell(currentCellName, currentCellFaction, currentCellLock, currentCellPA);
             cells.add(cell);
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            //DO WORK HERE
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-           // JSONArray cellArray = baseJsonResponse.getJSONArray("cell");
-
-         /*   // For each earthquake in the earthquakeArray, create an {@link Earthquake} object
-            for (int i = 0; i < earthquakeArray.length(); i++) {
-
-                // Get a single earthquake at position i within the list of earthquakes
-                JSONObject currentEarthquake = earthquakeArray.getJSONObject(i);
-
-                // For a given earthquake, extract the JSONObject associated with the
-                // key called "properties", which represents a list of all properties
-                // for that earthquake.
-                JSONObject properties = currentEarthquake.getJSONObject("properties");
-
-                // Extract the value for the key called "mag"
-                double magnitude = properties.getDouble("mag");
-
-                // Extract the value for the key called "place"
-                String location = properties.getString("place");
-
-                // Extract the value for the key called "time"
-                long time = properties.getLong("time");
-
-                // Extract the value for the key called "url"
-                String url = properties.getString("url");
-
-                // Create a new {@link Earthquake} object with the magnitude, location, time,
-                // and url from the JSON response.
-                Earthquake earthquake = new Earthquake(magnitude, location, time, url);
-
-                // Add the new {@link Earthquake} to the list of earthquakes.
-                earthquakes.add(earthquake);
-            }
-            */
 
         } catch (JSONException e) {
 
@@ -177,7 +224,7 @@ public final class QueryUtils {
 
         return cells;
     }
-
+*/
 }
 
 
