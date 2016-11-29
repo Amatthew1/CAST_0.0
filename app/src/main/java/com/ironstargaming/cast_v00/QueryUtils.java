@@ -101,10 +101,7 @@ public final class QueryUtils {
 
 
         CellContainer cellContainer = extractCellFromJson(jsonResponse);
-        /////////////////////////////////////////////fix return of extract
 
-
-///////////////////////////// fix whatever eats fetch
 
         return cellContainer;
     }
@@ -112,24 +109,7 @@ public final class QueryUtils {
 
 
 
-/*
-    public static List<Cell> fetchCellData(String requestUrl) {
-        URL url = createUrl(requestUrl);
 
-        String jsonResponse = null;
-        try {
-            jsonResponse = makeHttpRequest(url);
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
-        }
-
-
-        List<Cell> cells = extractCellFromJson(jsonResponse);
-
-
-        return cells;
-    }
-*/
 
     private static CellContainer extractCellFromJson(String jsonResponse) {
 
@@ -190,41 +170,7 @@ public final class QueryUtils {
 
         return cellContainer;
     }
-    /*
-    private static List<Cell> extractCellFromJson(String jsonResponse) {
 
-        if (TextUtils.isEmpty(jsonResponse)) {
-            return null;
-        }
-
-        List<Cell> cells = new ArrayList<>();
-
-
-        try {
-
-
-            JSONObject Cell = new JSONObject(jsonResponse);
-
-            String currentCellName = Cell.getString("name");
-            JSONObject properties = Cell.getJSONObject("properties");
-            String currentCellFaction = properties.getString("faction");
-            Boolean currentCellPA = properties.getBoolean("player_awareness");
-            Boolean currentCellLock = properties.getBoolean("locked");
-
-
-            Cell cell = new Cell(currentCellName, currentCellFaction, currentCellLock, currentCellPA);
-            cells.add(cell);
-
-
-        } catch (JSONException e) {
-
-            Log.e("QueryUtils", "Problem parsing the cell JSON results", e);
-        }
-
-
-        return cells;
-    }
-*/
 }
 
 

@@ -3,11 +3,17 @@ package com.ironstargaming.cast_v00;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
@@ -28,15 +34,33 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
     private TextView mEmptyStateView;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_settings){
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                    startActivity(settingsIntent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list);
-        ListView centerCellListView = (ListView) findViewById(R.id.list);
-        ListView childCellListView = (ListView) findViewById(R.id.list);
+        setContentView(R.layout.activity_main);
+      //  ListView centerCellListView = (ListView) findViewById(R.id.list);
+        ListView childCellListView = (ListView) findViewById(R.id.child_cell_view);
 
         mEmptyStateView = (TextView) findViewById(R.id.empty_view);
 
-        centerCellListView.setEmptyView(mEmptyStateView);
+ //       centerCellListView.setEmptyView(mEmptyStateView);
         childCellListView.setEmptyView(mEmptyStateView);
 
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -61,7 +85,28 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
 
     @Override
     public Loader<CellContainer> onCreateLoader(int id, Bundle bundle) {
-        return new CellLoader(this, CAST_REQUEST_URL);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String numScopes = sharedPreferences.getString(
+                        getString(R.string.settings_num_displayed_scopes_key),
+                        getString(R.string.settings_num_displayed_scopes_default));
+        String orderBy = sharedPreferences.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default)
+        );
+        Uri baseUri = Uri.parse(CAST_REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        uriBuilder.appendQueryParameter("num_scopes", numScopes);
+        //uriBuilder.appendQueryParameter("asST", asST);
+        uriBuilder.appendQueryParameter("orderby", orderBy);
+
+
+
+
+
+
+        return new CellLoader(this, uriBuilder.toString());
     }
 
     @Override
@@ -73,7 +118,26 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
         mEmptyStateView.setText("No cells found?");
 
         mAdapter.clear();
+///////////////////////////////////////////////////////////////////////////////////////
+        Cell centerCell = cellContainer.getCenterCell();
+        TextView centerCellNameTextView = (TextView) findViewById(R.id.center_cell_name);
+        String centerCellName = centerCell.getName();
+        centerCellNameTextView.setText(centerCellName);
 
+        TextView centerCellFactionTextView = (TextView) findViewById(R.id.center_cell_faction);
+        String centerCellFaction = centerCell.getFaction();
+        centerCellFactionTextView.setText(centerCellFaction);
+
+        TextView centerCellLockedTextView = (TextView) findViewById(R.id.center_cell_lock);
+        String centerCellLock="Locked";
+        if(!centerCell.isLocked()){centerCellLock="Unlocked";}
+        centerCellLockedTextView.setText(centerCellLock);
+
+
+
+
+
+        /////////////////////////////////////////////////////////////////////////////
         List<Cell> childCellList = cellContainer.getChildCellList();
 
         if (childCellList != null && !childCellList.isEmpty()) {

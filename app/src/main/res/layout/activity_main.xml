@@ -9,57 +9,66 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.ironstargaming.cast_v00.MainActivity"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context="com.ironstargaming.cast_v00.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#555555"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:layout_margin="16dp"
+        android:background="#800000"
+        >
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:id="@+id/center_cell_name"
+    android:layout_margin="16dp"
+    android:textSize="32dp"
+    android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/cell_name"
+            android:layout_margin="16dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:background="#EEEEEE"/>
+            android:layout_height="match_parent"
+            android:id="@+id/center_cell_faction"/>
 
         <TextView
-            android:id="@+id/cell_faction"
+            android:layout_margin="16dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:background="#AAAAAA"/>
+            android:layout_height="match_parent"
+            android:id="@+id/center_cell_lock"/>
 
-        <TextView
-            android:id="@+id/cell_lock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:background="#DDDDDD"/>
 
-        <TextView
-            android:id="@+id/cell_PA"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:background="#BBBBBB"/>
+
+
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="36dp" />
-
-    <ScrollView
+    <ListView
+        android:id="@+id/child_cell_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#666666"
-        android:orientation="vertical">
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:orientation="vertical" />
 
 
-    </ScrollView>
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Cells?"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textSize="16sp" />
+
+    <ProgressBar
+        android:id="@+id/load_indicator"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="5dp" />
 
 
 </LinearLayout>

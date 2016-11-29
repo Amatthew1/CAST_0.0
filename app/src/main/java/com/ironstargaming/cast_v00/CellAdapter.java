@@ -25,7 +25,7 @@ public class CellAdapter extends ArrayAdapter<Cell> {
         View listItemView = convertView;
 
         if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.activity_main, parent, false);
+            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.child_cell_list, parent, false);
         }
 
 
