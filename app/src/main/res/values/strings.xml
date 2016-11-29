@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">CAST_v0.0</string>
+    <string name="settings_menu_item">Settings</string>
+    <string name="settings_title">CAST Settings</string>
+    <!-- strings for num_displayed_scopes-->
+    <string name="settings_num_displayed_scopes_label">Number of scopes</string>
+    <string name="settings_num_displayed_scopes_key" translatable="false">num_scopes</string>
+    <string name="settings_num_displayed_scopes_default" translatable="false">3</string>
+    <!-- Strings for Order-By Preference -->
+    <string name="settings_order_by_label">Order By</string>
+    <string name="settings_order_by_key" translatable="false">order_by</string>
+    <string name="settings_order_by_default" translatable="false">@string/settings_order_by_function_value</string>
+    <!-- Label for order-by function option-->
+    <string name="settings_order_by_function_label">Function</string>
+    <string name="settings_order_by_function_value" translatable="false">function</string>
+    <!--Label for order-by faction option-->
+    <string name="settings_order_by_faction_label">Faction</string>
+    <string name="settings_order_by_faction_value" translatable="false">faction</string>
+</resources>
